@@ -1,31 +1,31 @@
 module SpreeSitemap::SpreeDefaults
   include Spree::Core::Engine.routes.url_helpers
-  include Spree::BaseHelper # for meta_data
+  #include Spree::BaseHelper # for meta_data
 
   def default_url_options
     { host: SitemapGenerator::Sitemap.default_host }
   end
 
   def add_login(options = {})
-    add(login_path, options)
+    add(Spree::Core::Engine.routes.url_helpers.login_path, options)
   end
 
   def add_signup(options = {})
-    add(signup_path, options)
+    add(Spree::Core::Engine.routes.url_helpers.signup_path, options)
   end
 
   def add_account(options = {})
-    add(account_path, options)
+    add(Spree::Core::Engine.routes.url_helpers.account_path, options)
   end
 
   def add_password_reset(options = {})
-    add(new_spree_user_password_path, options)
+    add(Spree::Core::Engine.routes.url_helpers.new_spree_user_password_path, options)
   end
 
   def add_products(options = {})
     active_products = Spree::Product.active.uniq
 
-    add(products_path, options.merge(lastmod: active_products.last_updated))
+    add(Spree::Core::Engine.routes.url_helpers.products_path, options.merge(lastmod: active_products.last_updated))
     active_products.each do |product|
       add_product(product, options)
     end
@@ -43,7 +43,7 @@ module SpreeSitemap::SpreeDefaults
       opts.merge!(video: [video_options(primary_video.youtube_ref, product)])
     end
 
-    add(product_path(product), opts)
+    add(Spree::Core::Engine.routes.url_helpers.product_path(product), opts)
   end
 
   def add_pages(options = {})
@@ -63,7 +63,7 @@ module SpreeSitemap::SpreeDefaults
   end
 
   def add_taxon(taxon, options = {})
-    add(nested_taxons_path(taxon.permalink), options.merge(lastmod: taxon.products.last_updated)) if taxon.permalink.present?
+    add(Spree::Core::Engine.routes.url_helpers.nested_taxons_path(taxon.permalink), options.merge(lastmod: taxon.products.last_updated)) if taxon.permalink.present?
     taxon.children.each { |child| add_taxon(child, options) }
   end
 
